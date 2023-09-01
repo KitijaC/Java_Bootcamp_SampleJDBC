@@ -1,6 +1,7 @@
 import entity.Owner;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class SampleWorkingWithOwnerTable {
 
@@ -36,12 +37,13 @@ public class SampleWorkingWithOwnerTable {
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         } catch (Exception exception) {
-            System.out.println(exception.getMessage());;
+            System.out.println(exception.getMessage());
+            ;
         }
         return null;
     }
 
-    private Owner getOwnerById(int ownerId) {
+    public Owner getOwnerById(int ownerId) {
         try {
             String url = "jdbc:mysql://localhost:3306/java_35_36_pet_manager";
             String username = "Java_35_36";
@@ -56,12 +58,12 @@ public class SampleWorkingWithOwnerTable {
             // process the result
             if (result.next()) {
                 return new Owner(
-                    result.getInt("id"),
-                    result.getString("ownerName"),
-                    result.getInt("age"),
-                    result.getString("email"),
-                    result.getTimestamp("createdAt"),
-                    result.getTimestamp("lastUpdated")
+                        result.getInt("id"),
+                        result.getString("ownerName"),
+                        result.getInt("age"),
+                        result.getString("email"),
+                        result.getTimestamp("createdAt"),
+                        result.getTimestamp("lastUpdated")
                 );
             } else {
                 throw new Exception("Unable to find owner with id " + ownerId);
@@ -72,7 +74,85 @@ public class SampleWorkingWithOwnerTable {
             exception.printStackTrace();
         }
 
-
         return null;
+    }
+
+    public ArrayList<Owner> getAllOwners() {
+        ArrayList<Owner> owners = new ArrayList<>();
+        try {
+            String url = "jdbc:mysql://localhost:3306/java_35_36_pet_manager";
+            String username = "Java_35_36";
+            String password = "valdemarpils2606";
+            Connection connection = DriverManager.getConnection(url, username, password);
+
+            String query = "SELECT * FROM owners";
+
+            PreparedStatement statement = connection.prepareStatement(query);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Owner owner = new Owner(
+                        resultSet.getInt("id"),
+                        resultSet.getString("ownerName"),
+                        resultSet.getInt("age"),
+                        resultSet.getString("email"),
+                        resultSet.getTimestamp("createdAt"),
+                        resultSet.getTimestamp("lastUpdated")
+                );
+                owners.add(owner);
+            }
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+
+        return owners;
+    }
+
+    public void updateOwner(Owner ownerToUpdate) {
+        try {
+            String url = "jdbc:mysql://localhost:3306/java_35_36_pet_manager";
+            String username = "Java_35_36";
+            String password = "valdemarpils2606";
+            Connection connection = DriverManager.getConnection(url, username, password);
+            String query = "UPDATE owners SET ownerName=?, age=?, email=? WHERE id=?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, ownerToUpdate.getOwnerName());
+            statement.setInt(2, ownerToUpdate.getAge());
+            statement.setString(3, ownerToUpdate.getEmail());
+            statement.setInt(4, ownerToUpdate.getId());
+
+            int result = statement.executeUpdate();
+            if (result != 1) throw new Exception("Problem occurred during update");
+
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+
+        } catch (Exception exception) {
+            System.out.println(exception.getMessage());
+        }
+    }
+
+    public void deleteOwner(int id) {
+        try {
+            String url = "jdbc:mysql://localhost:3306/java_35_36_pet_manager";
+            String username = "Java_35_36";
+            String password = "valdemarpils2606";
+            Connection connection = DriverManager.getConnection(url, username, password);
+            String query = "DELETE FROM owners WHERE id = ?";
+
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+
+            int result = statement.executeUpdate();
+
+            if (result != 1) throw new Exception("Problem deleting item");
+
+            // this makes sure that we free up the connection and don't keep connection running in the background
+            connection.close();
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 }
