@@ -1,46 +1,93 @@
-import entity.Owner;
-
-import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        SampleWorkingWithOwnerTable sampleWorkingWithOwnerTable = new SampleWorkingWithOwnerTable();
+        Main main = new Main();
+        main.showMenu();
+    }
 
-        // creating item to database
-        Owner createdOwner = sampleWorkingWithOwnerTable.createOwner(new Owner("Zino", 2, "zino@home.com"));
-        System.out.println(createdOwner);
-        System.out.println(sampleWorkingWithOwnerTable.createOwner(new Owner("Sam", 94, "sam@home.com")));
-        System.out.println(sampleWorkingWithOwnerTable.createOwner(new Owner("Juliet", 45, "juliet@home.com")));
+    private void showMenu() {
+        System.out.println("""
+            Welcome to pet manager app, Please choose menu option:
+            1. Pet options
+            2. Owner options
+            9. Exit
+            """);
 
-        // get single item out of database
-        sampleWorkingWithOwnerTable.getOwnerById(20);
-        sampleWorkingWithOwnerTable.getOwnerById(createdOwner.getId());
+        Scanner scanner = new Scanner(System.in);
+        String userChoice = scanner.nextLine();
 
-        // get all items out of database
-        ArrayList<Owner> owners = sampleWorkingWithOwnerTable.getAllOwners();
-        System.out.println(owners);
+        System.out.println(this.getMenuText(userChoice));
+        userChoice = scanner.nextLine();
 
-        // update items in database
-        Owner ownerToUpdate = sampleWorkingWithOwnerTable.createOwner(new Owner("Zino", 2, "zino@home.com"));
-        ownerToUpdate = owners.get(0);
-        ownerToUpdate.setOwnerName("Updated Zino");
-        ownerToUpdate.setAge(143);
+        if (userChoice.equals("9")) System.exit(0);
+        if (userChoice == "2") this.handleOwnerChoice(userChoice);
+        else this.handlePetChoice(userChoice);
 
-        sampleWorkingWithOwnerTable.updateOwner(ownerToUpdate);
-        System.out.println(
-                "After update " +
-                sampleWorkingWithOwnerTable.getOwnerById(ownerToUpdate.getId())
-        );
+        this.showMenu();
+    }
 
-        // delete item from database
-        Owner ownerToDelete = sampleWorkingWithOwnerTable.createOwner(new Owner("owner that you will not see", 2, "zino@home.com"));
-        sampleWorkingWithOwnerTable.deleteOwner(ownerToDelete.getId());
-        // after deleting it should not exist in database anymore
-        System.out.println("found owner after deleting with id: " + ownerToDelete.getId() + " " + sampleWorkingWithOwnerTable.getOwnerById(ownerToDelete.getId()));
+    private String getMenuText(String userChoice) {
+        String menuText = "Please choose what you would like to do \n";
 
-        Owner anotherOwnerToDelete = sampleWorkingWithOwnerTable.getOwnerById(createdOwner.getId());
-        sampleWorkingWithOwnerTable.deleteOwner(anotherOwnerToDelete.getId());
+        if (Objects.equals(userChoice, "1")) menuText += this.getOwnerMenu();
+        else if (Objects.equals(userChoice, "2")) menuText += this.getPetMenu();
+        else System.out.println("Please choose one of the options from above");
 
-        // task: make CRUD for petTypes table
+        menuText += """
+                8. Back to main menu
+                9. Exit
+                """;
+        return menuText;
+    }
+
+    private void handlePetChoice(String userChoice) {
+        switch (userChoice) {
+            case "1":
+                // create pet here
+                break;
+            case "2":
+                // show all pets here
+                break;
+            case "3":
+                // find pet
+                break;
+            case "4":
+                // filter pets
+                break;
+            case "5":
+                // update pet
+                break;
+            case "6":
+                // delete pet
+                break;
+        }
+    }
+
+    private void handleOwnerChoice(String userChoice) {
+
+    }
+
+    private String getOwnerMenu() {
+        return """
+                1. create owner
+                2. show all owners
+                3. find owner
+                4. filter owners
+                5. update owner
+                6. delete owner
+                """;
+    }
+
+    private String getPetMenu() {
+        return """
+                1. create pet
+                2. show all pets
+                3. find pet
+                4. filter pets
+                5. update pet
+                6. delete pet
+                """;
     }
 }

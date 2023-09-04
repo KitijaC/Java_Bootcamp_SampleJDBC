@@ -1,4 +1,6 @@
-import entity.Owner;
+package example;
+
+import owner.Owner;
 
 import java.sql.*;
 import java.util.ArrayList;

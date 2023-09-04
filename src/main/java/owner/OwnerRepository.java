@@ -1,4 +1,6 @@
-import entity.Owner;
+package owner;
+
+import owner.Owner;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -61,6 +63,7 @@ public class OwnerRepository {
     }
 
     public ArrayList<Owner> getAllOwners() throws SQLException {
+
         ArrayList<Owner> owners = new ArrayList<>();
 
         String query = "SELECT * FROM owners";
@@ -75,7 +78,38 @@ public class OwnerRepository {
         return owners;
     }
 
+    public void updateOwner(Owner ownerToUpdate) throws SQLException, OwnerRepositoryActionFailedException {
+
+        String query = "UPDATE owners SET ownerName=?, age=?, email=? WHERE id=?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, ownerToUpdate.getOwnerName());
+        statement.setInt(2, ownerToUpdate.getAge());
+        statement.setString(3, ownerToUpdate.getEmail());
+        statement.setInt(4, ownerToUpdate.getId());
+
+        int result = statement.executeUpdate();
+        if (result != 1) throw new OwnerRepositoryActionFailedException("Problem occurred during update");
+
+    }
+
+    public void deleteOwner(int id) throws SQLException, OwnerRepositoryActionFailedException {
+
+        String query = "DELETE FROM owners WHERE id = ?";
+
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, id);
+
+        int result = statement.executeUpdate();
+
+        if (result != 1) throw new OwnerRepositoryActionFailedException("Problem deleting item");
+
+        // this makes sure that we free up the connection and don't keep connection running in the background
+        connection.close();
+
+    }
+
     private Owner convertResultSetToOwner(ResultSet resultSet) throws SQLException {
+
         return new Owner(
                 resultSet.getInt("id"),
                 resultSet.getString("ownerName"),

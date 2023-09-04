@@ -1,4 +1,4 @@
-package entity;
+package pet;
 
 import java.sql.Timestamp;
 
@@ -25,13 +25,16 @@ public class Pet {
     public Pet() {
     }
 
-    public Pet(int id, String petName, int age, float weight, int ownerId, int petTypeId) {
+
+    public Pet(int id, String petName, int age, float weight, int ownerId, int petTypeId, Timestamp createdAt, Timestamp lastUpdated) {
         this.id = id;
         this.petName = petName;
         this.age = age;
         this.weight = weight;
         this.ownerId = ownerId;
         this.petTypeId = petTypeId;
+        this.createdAt = createdAt;
+        this.lastUpdated = lastUpdated;
     }
 
     public int getId() {
