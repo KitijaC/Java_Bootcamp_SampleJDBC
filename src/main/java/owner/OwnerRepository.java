@@ -41,7 +41,6 @@ public class OwnerRepository {
 
         if (result.next()) {
             int ownerId = result.getInt(1);
-
             return this.getOwnerById(ownerId);
         }
 
@@ -118,5 +117,38 @@ public class OwnerRepository {
                 resultSet.getTimestamp("createdAt"),
                 resultSet.getTimestamp("lastUpdated")
         );
+    }
+
+
+    public Owner findOwnerByIdOrEmail(String ownerIdOrEmail) throws SQLException, OwnerRepositoryActionFailedException {
+
+        String query = "SELECT * FROM owners WHERE owners.id = ? OR owners.email = ? LIMIT 1";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setString(1, ownerIdOrEmail);
+        preparedStatement.setString(2, ownerIdOrEmail);
+        ResultSet result = preparedStatement.executeQuery();
+
+        if (result.next()) {
+            return this.convertResultSetToOwner(result);
+        }
+
+        throw new OwnerRepositoryActionFailedException("Unable to find owner with id " + ownerIdOrEmail);
+    }
+
+    public ArrayList<Owner> filterOwnersBy(String filterBy, String informationToFind) throws SQLException {
+        ArrayList<Owner> owners = new ArrayList<>();
+
+        String query = "SELECT * FROM owners WHERE " + filterBy + " LIKE '%" + informationToFind + "%'";
+
+        System.out.println(query);
+
+        PreparedStatement statement = connection.prepareStatement(query);
+
+        ResultSet resultSet = statement.executeQuery();
+
+        while (resultSet.next()) {
+            owners.add(this.convertResultSetToOwner(resultSet));
+        }
+        return owners;
     }
 }

@@ -1,7 +1,10 @@
+import owner.OwnerController;
+
 import java.util.Objects;
 import java.util.Scanner;
 
 public class Main {
+    private OwnerController ownerController = new OwnerController();
     public static void main(String[] args) {
         Main main = new Main();
         main.showMenu();
@@ -16,14 +19,19 @@ public class Main {
             """);
 
         Scanner scanner = new Scanner(System.in);
-        String userChoice = scanner.nextLine();
+        String mainMenuChoice = scanner.nextLine();
 
-        System.out.println(this.getMenuText(userChoice));
-        userChoice = scanner.nextLine();
+        if (mainMenuChoice.equals("9")) System.exit(0);
 
-        if (userChoice.equals("9")) System.exit(0);
-        if (userChoice == "2") this.handleOwnerChoice(userChoice);
-        else this.handlePetChoice(userChoice);
+        System.out.println(this.getMenuText(mainMenuChoice));
+        String subMenuChoice = scanner.nextLine();
+
+        if (mainMenuChoice.equals("9")) System.exit(0);
+
+        if (Objects.equals(mainMenuChoice,"2"))
+            this.handleOwnerChoice(subMenuChoice);
+        else
+            this.handlePetChoice(subMenuChoice);
 
         this.showMenu();
     }
@@ -31,8 +39,8 @@ public class Main {
     private String getMenuText(String userChoice) {
         String menuText = "Please choose what you would like to do \n";
 
-        if (Objects.equals(userChoice, "1")) menuText += this.getOwnerMenu();
-        else if (Objects.equals(userChoice, "2")) menuText += this.getPetMenu();
+        if (Objects.equals(userChoice, "1")) menuText += this.getPetMenu();
+        else if (Objects.equals(userChoice, "2")) menuText += this.getOwnerMenu();
         else System.out.println("Please choose one of the options from above");
 
         menuText += """
@@ -45,7 +53,7 @@ public class Main {
     private void handlePetChoice(String userChoice) {
         switch (userChoice) {
             case "1":
-                // create pet here
+                // create pet
                 break;
             case "2":
                 // show all pets here
@@ -66,8 +74,28 @@ public class Main {
     }
 
     private void handleOwnerChoice(String userChoice) {
-
+        switch (userChoice) {
+            case "1":
+                this.ownerController.createOwner();
+                break;
+            case "2":
+                this.ownerController.displayOwners(null);
+                break;
+            case "3":
+                this.ownerController.findOwner();
+                break;
+            case "4":
+                this.ownerController.filterOwner();
+                break;
+            case "5":
+                // update owner
+                break;
+            case "6":
+                // delete owner
+                break;
+        }
     }
+
 
     private String getOwnerMenu() {
         return """
