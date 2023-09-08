@@ -1,10 +1,12 @@
 import owner.OwnerController;
+import pet.PetController;
 
 import java.util.Objects;
 import java.util.Scanner;
 
 public class Main {
     private OwnerController ownerController = new OwnerController();
+    private PetController petController = new PetController();
     public static void main(String[] args) {
         Main main = new Main();
         main.showMenu();
@@ -53,16 +55,16 @@ public class Main {
     private void handlePetChoice(String userChoice) {
         switch (userChoice) {
             case "1":
-                // create pet
+                this.petController.createPet();
                 break;
             case "2":
-                // show all pets here
+                this.petController.displayPets(null);
                 break;
             case "3":
-                // find pet
+                this.petController.findPet();
                 break;
             case "4":
-                // filter pets
+                this.petController.filterPet();
                 break;
             case "5":
                 // update pet

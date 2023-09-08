@@ -1,5 +1,7 @@
 package pet;
 
+import owner.Owner;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -37,15 +39,17 @@ public class PetRepository {
         preparedStatement.executeUpdate(); // this does the command to insert the data
 
         ResultSet result = preparedStatement.getGeneratedKeys();
+//        if (result.next()) return this.findPetById(result.getInt("id"));
         if (result.next()) {
-            return this.findPetById(result.getInt("id"));
+            int generatedId = result.getInt(1);
+            return this.findPetById(generatedId);
         }
 
         throw new PetActionFailedException("Problem creating new pet");
     }
 
     public Pet findPetById(int idOfPetToFind) throws SQLException, PetActionFailedException {
-        String query =  "SELECT * FROM pets WHERE id = " + idOfPetToFind;
+        String query =  "SELECT * FROM pets WHERE id = ?";
         PreparedStatement preparedStatement = this.connection.prepareStatement(query);
         preparedStatement.setInt(1, idOfPetToFind);
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -97,5 +101,22 @@ public class PetRepository {
                 resultSet.getTimestamp("createdAt"),
                 resultSet.getTimestamp("lastUpdated")
         );
+    }
+
+    public ArrayList<Pet> filterPetsBy(String filterBy, String informationToFind) throws SQLException {
+        ArrayList<Pet> pets = new ArrayList<>();
+
+        String query = "SELECT * FROM pets WHERE " + filterBy + " LIKE '%" + informationToFind + "%'";
+
+        System.out.println(query);
+
+        PreparedStatement statement = connection.prepareStatement(query);
+
+        ResultSet resultSet = statement.executeQuery();
+
+        while (resultSet.next()) {
+            pets.add(this.convertResultSetToPetObject(resultSet));
+        }
+        return pets;
     }
 }

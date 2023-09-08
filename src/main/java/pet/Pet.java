@@ -14,6 +14,10 @@ public class Pet {
 
     // 3 constructors, getter and setter, toString method
 
+
+    public Pet() {
+    }
+
     public Pet(String petName, int age, float weight, int ownerId, int petTypeId) {
         this.petName = petName;
         this.age = age;
@@ -21,10 +25,6 @@ public class Pet {
         this.ownerId = ownerId;
         this.petTypeId = petTypeId;
     }
-
-    public Pet() {
-    }
-
 
     public Pet(int id, String petName, int age, float weight, int ownerId, int petTypeId, Timestamp createdAt, Timestamp lastUpdated) {
         this.id = id;
@@ -85,6 +85,22 @@ public class Pet {
         this.petTypeId = petTypeId;
     }
 
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Timestamp getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Timestamp lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
     @Override
     public String toString() {
         return "Pet{" +
@@ -94,6 +110,8 @@ public class Pet {
                 ", weight=" + weight +
                 ", ownerId=" + ownerId +
                 ", petTypeId=" + petTypeId +
+                ", createdAt=" + createdAt +
+                ", lastUpdated=" + lastUpdated +
                 '}';
     }
 }
