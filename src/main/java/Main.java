@@ -90,10 +90,10 @@ public class Main {
                 this.ownerController.filterOwner();
                 break;
             case "5":
-                // update owner
+                this.ownerController.updateOwner();
                 break;
             case "6":
-                // delete owner
+                this.ownerController.deleteOwner();
                 break;
         }
     }

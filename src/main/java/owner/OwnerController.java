@@ -1,5 +1,7 @@
 package owner;
 
+import pet.PetActionFailedException;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -93,5 +95,39 @@ public class OwnerController {
 
         );
         return filterOptions.get(filterBy);
+    }
+
+    public void updateOwner() {
+        try {
+            int idOfOwnerToUpdate = Integer.parseInt(this.getUserInput("Please enter the ID of the owner you want to update: "));
+            Owner existingOwner = this.ownerRepository.getOwnerById(idOfOwnerToUpdate);
+
+            if (existingOwner == null) {
+                System.out.println("Owner not found with ID: " + idOfOwnerToUpdate);
+            } else {
+                Owner updatedOwner = this.collectOwnerInfo();
+                updatedOwner.setId(idOfOwnerToUpdate);
+
+                this.ownerRepository.updateOwner(updatedOwner);
+
+                System.out.println("Owner updated successfully");
+            }
+        } catch (OwnerRepositoryActionFailedException exception) {
+            System.out.println("Error while updating owner: " + exception.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error: Invalid input or unexpected error occurred");
+        }
+    }
+
+    public void deleteOwner() {
+        try {
+            int id = Integer.parseInt(this.getUserInput("Please enter the ID of the owner you want to delete: "));
+            this.ownerRepository.deleteOwner(id);
+
+            System.out.println("Owner with ID " + id + " has been deleted successfully");
+
+        } catch (Exception exception) {
+            System.out.println("Error while deleting owner: " + exception.getMessage());
+        }
     }
 }

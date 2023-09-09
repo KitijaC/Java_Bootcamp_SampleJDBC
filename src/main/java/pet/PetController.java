@@ -130,10 +130,8 @@ public class PetController {
             this.petRepository.deletePet(idOfPetToDelete);
 
             System.out.println("Pet with ID " + idOfPetToDelete + " has been deleted successfully");
-        } catch (PetActionFailedException exception) {
+        } catch (Exception exception) {
             System.out.println("Error while deleting pet: " + exception.getMessage());
-        } catch (Exception e) {
-            System.out.println("Error: Invalid input or unexpected error occurred");
         }
     }
 }
