@@ -80,14 +80,26 @@ public class PetRepository {
         preparedStatement.setInt(5, petToUpdate.getOwnerId());
         preparedStatement.setInt(6, petToUpdate.getId());
 
-        preparedStatement.executeUpdate(); // this does the command to insert the data
+        int rowsUpdated = preparedStatement.executeUpdate();
 
-        ResultSet result = preparedStatement.getGeneratedKeys();
-        if (result.next()) {
-            return this.findPetById(result.getInt("id"));
+        if (rowsUpdated > 0) {
+            return this.findPetById(petToUpdate.getId());
+        } else {
+            throw new PetActionFailedException("Problem updating pet with id " + petToUpdate.getId());
         }
 
-        throw new PetActionFailedException("Problem updating pet with id " + petToUpdate.getId());
+    }
+
+    public void deletePet(int petId) throws SQLException, PetActionFailedException {
+        String query = "DELETE FROM pets WHERE id=?";
+        PreparedStatement preparedStatement = this.connection.prepareStatement(query);
+        preparedStatement.setInt(1, petId);
+
+        int rowsDeleted = preparedStatement.executeUpdate();
+
+        if (rowsDeleted == 0) {
+            throw new PetActionFailedException("Pet with ID " + petId + " not found or could not be deleted");
+        }
     }
 
     private Pet convertResultSetToPetObject(ResultSet resultSet) throws SQLException {

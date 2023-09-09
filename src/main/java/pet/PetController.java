@@ -101,4 +101,39 @@ public class PetController {
         );
         return filterOptions.get(filterBy);
     }
+
+    public void updatePet() {
+        try {
+            int idOfPetToUpdate = Integer.parseInt(this.getUserInput("Please enter the ID of the pet you want to update: "));
+            Pet existingPet = this.petRepository.findPetById(idOfPetToUpdate);
+
+            if (existingPet == null) {
+                System.out.println("Pet not found with ID: " + idOfPetToUpdate);
+            }
+
+            Pet updatedPet = this.collectPetInfo();
+            updatedPet.setId(idOfPetToUpdate);
+
+            Pet updatedPetFromDb = this.petRepository.updatePet(updatedPet);
+
+            System.out.println("Pet updated successfully");
+            System.out.println(updatedPetFromDb);
+
+        } catch (Exception exception) {
+            System.out.println("Error while updating pet: " + exception.getMessage());
+        }
+    }
+
+    public void deletePet() {
+        try {
+            int idOfPetToDelete = Integer.parseInt(this.getUserInput("Please enter the ID of the pet you want to delete: "));
+            this.petRepository.deletePet(idOfPetToDelete);
+
+            System.out.println("Pet with ID " + idOfPetToDelete + " has been deleted successfully");
+        } catch (PetActionFailedException exception) {
+            System.out.println("Error while deleting pet: " + exception.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error: Invalid input or unexpected error occurred");
+        }
+    }
 }

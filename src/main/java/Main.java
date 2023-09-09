@@ -67,10 +67,10 @@ public class Main {
                 this.petController.filterPet();
                 break;
             case "5":
-                // update pet
+                this.petController.updatePet();
                 break;
             case "6":
-                // delete pet
+                this.petController.deletePet();
                 break;
         }
     }
